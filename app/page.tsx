@@ -1,5 +1,5 @@
 import { Catalog } from "@/features/catalog/components/catalog";
-import Link from "next/link";
+import { RequestForm } from "@/features/requests/components/request-form";
 
 export default function HomePage() {
   return (
@@ -25,13 +25,9 @@ export default function HomePage() {
           <div className="mb-8 text-center">
             <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-brand-600">Estamos para ayudarte</p>
             <h2 className="text-3xl font-black text-brand-800">Contáctanos o haz tu pedido</h2>
-            <p className="mt-3 text-slate-600">Inicia sesión para enviar una solicitud de pedido.</p>
+            <p className="mt-3 text-slate-600">Envíanos tu consulta o pedido; necesitas una cuenta para registrarlo.</p>
           </div>
-          <div className="text-center">
-            <Link className="inline-flex rounded-lg bg-brand-800 px-6 py-3 font-bold text-white hover:bg-brand-600" href="/login">
-              Ingresar para continuar
-            </Link>
-          </div>
+          <RequestForm />
         </div>
       </section>
     </>

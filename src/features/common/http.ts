@@ -21,7 +21,15 @@ export async function http<T>(path: string, init: RequestInit = {}): Promise<T> 
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new HttpError("No se pudo conectar con la API. Verifica que el backend esté disponible.", 0);
+    }
+    throw error;
+  }
   if (!response.ok) {
     const body: unknown = await response.json().catch(() => null);
     const message =

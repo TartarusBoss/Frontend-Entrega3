@@ -17,6 +17,8 @@ export function AuthLinks() {
     <nav className="flex flex-wrap items-center gap-4 text-sm font-semibold" aria-label="Cuenta">
       {user ? (
         <>
+          <Link className="hover:text-brand-600" href="/mis-solicitudes">Mis solicitudes</Link>
+          {user.role === "admin" && <Link className="hover:text-brand-600" href="/admin">Administración</Link>}
           <span className="hidden text-slate-600 sm:inline">{user.name}</span>
           <button className="text-brand-800 underline" onClick={handleLogout}>Salir</button>
         </>
