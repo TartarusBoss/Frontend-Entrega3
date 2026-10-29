@@ -31,9 +31,7 @@ El backend tiene un Blueprint en `render.yaml` que prepara el servicio y ejecuta
 2. `FRONTEND_URL` en Render está configurada como `https://frontend-entrega3.vercel.app`.
 3. El proyecto Next.js de Vercel usa `NEXT_PUBLIC_API_HOST=https://sportzone-api-m6ag.onrender.com`.
 4. El seed del catálogo define nueve productos y cuentas de prueba. En producción, el catálogo se completó mediante la herramienta de administración; las contraseñas de las cuentas son privadas y no se documentan aquí.
-5. Si se recrea la base, configura `DATABASE_URL`, `SEED_ADMIN_PASSWORD` y `SEED_USER_PASSWORD` únicamente en el entorno de ejecución y ejecuta `npm run db:seed`. No agregues credenciales a Git ni uses las claves de ejemplo en producción.
-
-No publiques credenciales de bases de datos, contraseñas, secretos JWT ni tokens.
+5. Si se recrea la base, configura `DATABASE_URL`, `SEED_ADMIN_PASSWORD` y `SEED_USER_PASSWORD` únicamente en el entorno de ejecución y ejecuta `npm run db:seed`. 
 
 ## Cuentas locales del seed
 
@@ -52,14 +50,10 @@ Son cuentas exclusivamente locales para probar roles. Define claves nuevas si ca
 - **Dónde se guarda el token y su riesgo:** el navegador guarda el JWT en `localStorage` para conservar la sesión tras una recarga. Cualquier JavaScript que se ejecute en el mismo origen puede leerlo; por eso una vulnerabilidad XSS podría robar la sesión. En una versión más segura se puede usar una cookie `HttpOnly`, `Secure` y `SameSite`, con la protección CSRF correspondiente. El rol guardado en el navegador solo adapta la interfaz; el backend es quien decide el acceso.
 - **Diferencia entre `401` y `403`:** `401 Unauthorized` significa que falta un token válido. Por ejemplo, intentar borrar `DELETE /api/products/:id` sin iniciar sesión devuelve `401`. `403 Forbidden` significa que el token sí es válido, pero el rol no tiene permiso: si inicia sesión una cuenta `user` e intenta ese mismo borrado, la API responde `403`; una cuenta `admin` sí puede hacerlo. Ante un `401` en una ruta protegida, el cliente elimina la sesión local y redirige a `/login`; el error del inicio de sesión se muestra junto al campo de contraseña.
 - La contraseña solo se envía al endpoint de autenticación; el backend la almacena como hash bcrypt y nunca devuelve el hash ni incluye la contraseña en el JWT.
-- La IA se utilizó como apoyo para estructurar componentes y revisar errores. Antes de entregar, verifica que puedes explicar el flujo y las decisiones con tus propias palabras.
+- La IA se utilizó como apoyo para estructurar componentes y revisar errores
 
 ## Comprobaciones antes de entregar
+<img width="921" height="553" alt="image" src="https://github.com/user-attachments/assets/57e2c48b-80b3-4148-8519-76c395944546" />
+<img width="762" height="1355" alt="image" src="https://github.com/user-attachments/assets/20e0da54-9fdc-4bc8-ad23-350a19191c9a" />
 
-- [x] Desplegar y conectar el frontend y el backend; confirmar que `/health` y el catálogo funcionan.
-- [x] Comprobar registro, correo duplicado, login, persistencia de sesión tras recargar, creación y consulta de una solicitud, y respuestas `401`/`403`.
-- [x] Confirmar que la petición protegida `GET /api/requests/mias` responde `200` con un encabezado Bearer; el valor del token se mantuvo oculto.
-- [x] Registrar las URLs reales de Vercel y Render en este README.
-- [x] Adjuntar la captura de DevTools → Network de una solicitud protegida, con el valor del token cubierto: [evidencia de Network](./docs/evidencia-network.png).
 
-La captura corresponde a una solicitud `POST /api/requests` que respondió `201 Created`. El valor completo del token fue ocultado antes de guardar la imagen en este repositorio.
