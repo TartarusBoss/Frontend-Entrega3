@@ -6,7 +6,7 @@ Tienda deportiva para fútbol, básquetbol y MMA. Este repositorio contiene el f
 
 - Frontend: https://github.com/TartarusBoss/Frontend-Entrega3
 - Backend: https://github.com/TartarusBoss/Backend-Entrega3
-- Sitio en Vercel: https://frontend-entrega3-ghfzule7h-matias-664b.vercel.app
+- Sitio público en Vercel: https://frontend-entrega3.vercel.app
 - API en Render: https://sportzone-api-m6ag.onrender.com
 - Salud de la API: https://sportzone-api-m6ag.onrender.com/health
 
@@ -28,7 +28,7 @@ Validaciones disponibles: `npm run lint` y `npm run build`.
 El backend tiene un Blueprint en `render.yaml` que prepara el servicio y ejecuta las migraciones Prisma. La configuración actualmente desplegada es:
 
 1. La base PostgreSQL y el servicio de API están en Render, en la región de Oregon. Las migraciones se ejecutan con `prisma migrate deploy`.
-2. `FRONTEND_URL` en Render está configurada como `https://frontend-entrega3-ghfzule7h-matias-664b.vercel.app`.
+2. `FRONTEND_URL` en Render está configurada como `https://frontend-entrega3.vercel.app`.
 3. El proyecto Next.js de Vercel usa `NEXT_PUBLIC_API_HOST=https://sportzone-api-m6ag.onrender.com`.
 4. El seed del catálogo define nueve productos y cuentas de prueba. En producción, el catálogo se completó mediante la herramienta de administración; las contraseñas de las cuentas son privadas y no se documentan aquí.
 5. Si se recrea la base, configura `DATABASE_URL`, `SEED_ADMIN_PASSWORD` y `SEED_USER_PASSWORD` únicamente en el entorno de ejecución y ejecuta `npm run db:seed`. No agregues credenciales a Git ni uses las claves de ejemplo en producción.
