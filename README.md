@@ -9,7 +9,7 @@ Tienda deportiva para fútbol, básquetbol y MMA. Este repositorio contiene el f
 - Sitio en Vercel: pendiente de configurar.
 - API en Render o Railway: pendiente de configurar.
 
-Los despliegues se deben completar cuando exista una base PostgreSQL de producción y se hayan configurado las variables de entorno en ambas plataformas. No uses las credenciales locales de prueba como credenciales de producción.
+Los repositorios ya contienen el código de la entrega, pero estos enlaces no significan que los servicios estén desplegados. Sigue la sección [Desplegar y conectar Vercel con Render](#desplegar-y-conectar-vercel-con-render) para configurar los dos servicios. No uses credenciales locales de prueba en producción.
 
 ## Ejecutar localmente
 
@@ -21,6 +21,19 @@ Requisitos: Node.js 20.9 o superior y PostgreSQL.
 4. Abre `http://localhost:3000`.
 
 Validaciones disponibles: `npm run lint` y `npm run build`.
+
+## Desplegar y conectar Vercel con Render
+
+El backend tiene un Blueprint en `render.yaml` que prepara el servicio y ejecuta las migraciones Prisma. Estos pasos conectan los despliegues; aún debes ejecutarlos desde las cuentas de Vercel y Render.
+
+1. **Crear PostgreSQL en Render.** Crea una base PostgreSQL de producción en la misma región que el servicio de API. Guarda la URL interna de conexión para usarla como `DATABASE_URL`.
+2. **Crear el servicio de API.** En Render, crea un Blueprint desde `TartarusBoss/Backend-Entrega3` y usa su `render.yaml`. Cuando Render solicite valores, configura `DATABASE_URL` y deja `FRONTEND_URL` pendiente hasta crear el sitio. El Blueprint genera `JWT_SECRET`; establece también `JWT_EXPIRES_IN=1h`. El despliegue ejecuta `prisma migrate deploy` antes de iniciar la API.
+3. **Cargar el seed de producción una sola vez.** En un entorno confiable, configura la `DATABASE_URL` de producción y contraseñas nuevas para `SEED_ADMIN_PASSWORD` y `SEED_USER_PASSWORD`, y ejecuta `npm run db:seed` desde el repositorio backend. No guardes esas contraseñas en Git ni reutilices las claves de ejemplo. Conserva las credenciales de prueba de producción en un lugar seguro para completar el README de entrega.
+4. **Crear el sitio en Vercel.** Importa `TartarusBoss/Frontend-Entrega3` como proyecto Next.js, con la carpeta raíz `./` y la rama `main`. En las variables del entorno de producción añade `NEXT_PUBLIC_API_HOST` con el origen HTTPS de la API de Render, por ejemplo `https://sportzone-api.onrender.com` (sin `/api` al final). Despliega y anota la URL HTTPS que Vercel asigne.
+5. **Configurar CORS.** En el servicio backend de Render establece `FRONTEND_URL` con el origen exacto de Vercel, por ejemplo `https://nombre-del-proyecto.vercel.app`, sin una ruta final. Guarda el cambio y vuelve a desplegar la API.
+6. **Validar la conexión.** Abre `<URL_DE_API>/health` y confirma que responde `{"status":"ok"}`. Abre el sitio de Vercel, comprueba que cargan los productos y prueba registro, login y una solicitud con una cuenta de usuario. Para probar permisos, confirma `401` sin token y `403` al intentar borrar un producto con una cuenta user. Actualiza los enlaces de despliegue de este README cuando ambos servicios estén comprobados.
+
+Los valores del dominio son ejemplos de formato, no URLs asignadas a estos proyectos. No publiques credenciales de bases de datos, secretos JWT ni tokens.
 
 ## Cuentas locales del seed
 
