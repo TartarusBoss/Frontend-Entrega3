@@ -6,10 +6,11 @@ Tienda deportiva para fútbol, básquetbol y MMA. Este repositorio contiene el f
 
 - Frontend: https://github.com/TartarusBoss/Frontend-Entrega3
 - Backend: https://github.com/TartarusBoss/Backend-Entrega3
-- Sitio en Vercel: pendiente de configurar.
-- API en Render o Railway: pendiente de configurar.
+- Sitio en Vercel: https://frontend-entrega3-ghfzule7h-matias-664b.vercel.app
+- API en Render: https://sportzone-api-m6ag.onrender.com
+- Salud de la API: https://sportzone-api-m6ag.onrender.com/health
 
-Los repositorios ya contienen el código de la entrega, pero estos enlaces no significan que los servicios estén desplegados. Sigue la sección [Desplegar y conectar Vercel con Render](#desplegar-y-conectar-vercel-con-render) para configurar los dos servicios. No uses credenciales locales de prueba en producción.
+Los servicios están desplegados y conectados. El catálogo de producción contiene nueve productos. No uses ni publiques las credenciales de producción; las claves del seed local son solo para desarrollo.
 
 ## Ejecutar localmente
 
@@ -22,18 +23,17 @@ Requisitos: Node.js 20.9 o superior y PostgreSQL.
 
 Validaciones disponibles: `npm run lint` y `npm run build`.
 
-## Desplegar y conectar Vercel con Render
+## Configuración del despliegue en Vercel y Render
 
-El backend tiene un Blueprint en `render.yaml` que prepara el servicio y ejecuta las migraciones Prisma. Estos pasos conectan los despliegues; aún debes ejecutarlos desde las cuentas de Vercel y Render.
+El backend tiene un Blueprint en `render.yaml` que prepara el servicio y ejecuta las migraciones Prisma. La configuración actualmente desplegada es:
 
-1. **Crear PostgreSQL en Render.** Crea una base PostgreSQL de producción en la misma región que el servicio de API. Guarda la URL interna de conexión para usarla como `DATABASE_URL`.
-2. **Crear el servicio de API.** En Render, crea un Blueprint desde `TartarusBoss/Backend-Entrega3` y usa su `render.yaml`. Cuando Render solicite valores, configura `DATABASE_URL` y deja `FRONTEND_URL` pendiente hasta crear el sitio. El Blueprint genera `JWT_SECRET`; establece también `JWT_EXPIRES_IN=1h`. El despliegue ejecuta `prisma migrate deploy` antes de iniciar la API.
-3. **Cargar el seed de producción una sola vez.** En un entorno confiable, configura la `DATABASE_URL` de producción y contraseñas nuevas para `SEED_ADMIN_PASSWORD` y `SEED_USER_PASSWORD`, y ejecuta `npm run db:seed` desde el repositorio backend. No guardes esas contraseñas en Git ni reutilices las claves de ejemplo. Conserva las credenciales de prueba de producción en un lugar seguro para completar el README de entrega.
-4. **Crear el sitio en Vercel.** Importa `TartarusBoss/Frontend-Entrega3` como proyecto Next.js, con la carpeta raíz `./` y la rama `main`. En las variables del entorno de producción añade `NEXT_PUBLIC_API_HOST` con el origen HTTPS de la API de Render, por ejemplo `https://sportzone-api.onrender.com` (sin `/api` al final). Despliega y anota la URL HTTPS que Vercel asigne.
-5. **Configurar CORS.** En el servicio backend de Render establece `FRONTEND_URL` con el origen exacto de Vercel, por ejemplo `https://nombre-del-proyecto.vercel.app`, sin una ruta final. Guarda el cambio y vuelve a desplegar la API.
-6. **Validar la conexión.** Abre `<URL_DE_API>/health` y confirma que responde `{"status":"ok"}`. Abre el sitio de Vercel, comprueba que cargan los productos y prueba registro, login y una solicitud con una cuenta de usuario. Para probar permisos, confirma `401` sin token y `403` al intentar borrar un producto con una cuenta user. Actualiza los enlaces de despliegue de este README cuando ambos servicios estén comprobados.
+1. La base PostgreSQL y el servicio de API están en Render, en la región de Oregon. Las migraciones se ejecutan con `prisma migrate deploy`.
+2. `FRONTEND_URL` en Render está configurada como `https://frontend-entrega3-ghfzule7h-matias-664b.vercel.app`.
+3. El proyecto Next.js de Vercel usa `NEXT_PUBLIC_API_HOST=https://sportzone-api-m6ag.onrender.com`.
+4. El seed del catálogo define nueve productos y cuentas de prueba. En producción, el catálogo se completó mediante la herramienta de administración; las contraseñas de las cuentas son privadas y no se documentan aquí.
+5. Si se recrea la base, configura `DATABASE_URL`, `SEED_ADMIN_PASSWORD` y `SEED_USER_PASSWORD` únicamente en el entorno de ejecución y ejecuta `npm run db:seed`. No agregues credenciales a Git ni uses las claves de ejemplo en producción.
 
-Los valores del dominio son ejemplos de formato, no URLs asignadas a estos proyectos. No publiques credenciales de bases de datos, secretos JWT ni tokens.
+No publiques credenciales de bases de datos, contraseñas, secretos JWT ni tokens.
 
 ## Cuentas locales del seed
 
@@ -56,7 +56,10 @@ Son cuentas exclusivamente locales para probar roles. Define claves nuevas si ca
 
 ## Comprobaciones antes de entregar
 
-- [ ] Configurar y probar ambos despliegues con las variables de producción.
-- [ ] Probar registro duplicado, sesión después de refrescar, solicitud de usuario y permisos `401`/`403`.
-- [ ] En el navegador, abrir DevTools → Network y guardar una captura de una petición protegida que muestre el encabezado `Authorization` (sin compartir ni publicar el token).
-- [ ] Reemplazar los enlaces de despliegue pendientes por las URLs reales.
+- [x] Desplegar y conectar el frontend y el backend; confirmar que `/health` y el catálogo funcionan.
+- [x] Comprobar registro, correo duplicado, login, persistencia de sesión tras recargar, creación y consulta de una solicitud, y respuestas `401`/`403`.
+- [x] Confirmar que la petición protegida `GET /api/requests/mias` responde `200` con un encabezado Bearer; el valor del token se mantuvo oculto.
+- [x] Registrar las URLs reales de Vercel y Render en este README.
+- [x] Adjuntar la captura de DevTools → Network de una solicitud protegida, con el valor del token cubierto: [evidencia de Network](./docs/evidencia-network.png).
+
+La captura corresponde a una solicitud `POST /api/requests` que respondió `201 Created`. El valor completo del token fue ocultado antes de guardar la imagen en este repositorio.
